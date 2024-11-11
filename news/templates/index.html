@@ -1,0 +1,58 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+ <style>
+         img {
+            max-width: 50%;
+            height: auto;
+        }
+    </style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu</title>
+
+</head>
+  <link href="static/styles.css" rel="stylesheet" type="text/css" />
+<body>
+<h1>Список постов</h1>
+
+<!-- Форма для выбора количества элементов на странице -->
+<form method="GET" action="">
+    <label for="items_per_page">Элементов на странице:</label>
+    <select name="items_per_page" id="items_per_page" onchange="this.form.submit()">
+        <option value="2" {% if items_per_page == 2 %}selected{% endif %}>2</option>
+        <option value="3" {% if items_per_page == 3 %}selected{% endif %}>3</option>
+        <option value="4" {% if items_per_page == 4 %}selected{% endif %}>4</option>
+        <option value="5" {% if items_per_page == 5 %}selected{% endif %}>5</option>
+    </select>
+</form>
+
+<!-- Список постов -->
+<ul>
+    {% for post in page_obj %}
+        <li>{{ post.title }} - {{post.post}} - {{ post.created_at }}</li>
+    {% endfor %}
+</ul>
+
+<!-- Кастомная пагинация -->
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1&items_per_page={{ items_per_page }}">первая</a>
+            <a href="?page={{ page_obj.previous_page_number }}&items_per_page={{ items_per_page }}">предыдущая</a>
+        {% endif %}
+
+        <span class="current">
+            Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}&items_per_page={{ items_per_page }}">следующая</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}&items_per_page={{ items_per_page }}">последняя</a>
+        {% endif %}
+    </span>
+</div>
+</body>
+</html>
